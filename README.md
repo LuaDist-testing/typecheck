@@ -1,7 +1,7 @@
 Gradual type checking for Lua functions
 =======================================
 
-Copyright (C) 2014-2018 [Gary V. Vaughan][github]
+Copyright (C) 2014-2017 [Gary V. Vaughan][github]
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://mit-license.org)
 [![travis-ci status](https://secure.travis-ci.org/gvvaughan/typecheck.png?branch=master)](http://travis-ci.org/gvvaughan/typecheck/builds)
@@ -49,8 +49,7 @@ report for example):
 ```
 
 The best way to install without [LuaRocks][] is to copy the entire
-`lib/typecheck` directory into a subdirectory of your package search path,
-along with the modules listed as dependencies in the included rockspec.
+`lib/typecheck` directory into a subdirectory of your package search path.
 
 [luarocks]: http://www.luarocks.org "Lua package manager"
 
@@ -66,8 +65,8 @@ types in that argument:
     local argcheck = require "typecheck".argcheck
 
     local function case (with, branches)
-       argcheck ("std.functional.case", 2, "#table", branches)
-       ...
+      argcheck ("std.functional.case", 2, "#table", branches)
+      ...
 ```
 
 Or more comprehensively, wrap exported functions to raise an error if
@@ -75,8 +74,8 @@ the return or argument types do not meet your specification:
 
 ```lua
     return {
-       len = argscheck ("string.len (string) => int", string.len),
-       ...
+      len = argscheck ("string.len (string) => int", string.len),
+      ...
 ```
 
 Alternatively, argscheck can be used as an annotation, which makes it
@@ -85,16 +84,19 @@ look nicer when used at declaration time:
 ```lua
     local my_function = argscheck "my_function (int, int) => int" ..
     function (a, b)
-       return a + b
+      return a + b
     end
 ```
 
 By default, type checks are performed on every call.  But, they can be
 turned off and all of the run-time overhead eliminated in production
-code, either by calling `require 'std._debug' (false)` prior to loading
-`typecheck` or, more precisely, by setting
-`require 'std._debug'.argcheck = false`
+code, either by setting the global `_DEBUG = false` prior to loading
+`typecheck.lua` or, in conjunction with [lua-stdlib][]'s `debug_init`
+module, setting `std.debug_init._DEBUG.argcheck` to `false` (for
+compatibility with code that used `std.debug.argscheck` type checking
+while it was still bundled with stdlib).
 
+[lua-stdlib]: http://github.com/lua-stdlib/lua-stdlib "standard libraries"
 
 
 Documentation
@@ -124,19 +126,6 @@ points when proposing changes:
 0. Follow existing code. There are a lot of useful patterns and avoided
    traps there.
 
-1. 3-character indentation using SPACES in Lua sources: It makes rogue
-   TABs easier to see, and lines up nicely with 'if' and 'end' keywords.
-
-2. Simple strings are easiest to type using single-quote delimiters,
-   saving double-quotes for where a string contains apostrophes.
-
-3. Save horizontal space by only using SPACEs where the parser requires
-   them.
-
-4. Use vertical space to separate out compound statements to help the
-   coverage reports discover untested lines.
-
-5. Prefer explicit string function calls over object methods, to mitigate
-   issues with monkey-patching in caller environment.
+1. 2-character indentation using SPACES in Lua sources.
 
 [issues]: http://github.com/gvvaughan/typecheck/issues

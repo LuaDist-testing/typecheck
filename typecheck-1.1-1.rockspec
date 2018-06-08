@@ -1,9 +1,6 @@
---[[
- Gradual Function Type Checking for Lua 5.1, 5.2 & 5.3.
- Copyright (C) Gary V. Vaughan 2014-2018
-]]
+-- This file was automatically generated for the LuaDist project.
 
-local _MODREV, _SPECREV = 'git', '-1'
+local _MODREV, _SPECREV = '1.1', '-1'
 
 package = 'typecheck'
 version = _MODREV .. _SPECREV
@@ -20,25 +17,21 @@ description = {
    license = 'MIT/X11',
 }
 
+-- LuaDist source
+source = {
+  tag = "1.1-1",
+  url = "git://github.com/LuaDist-testing/typecheck.git"
+}
+-- Original source
+-- source = {
+--    url = 'http://github.com/gvvaughan/typecheck/archive/v' .. _MODREV .. '.zip',
+--    dir = 'typecheck-' .. _MODREV,
+-- }
+
 dependencies = {
    'lua >= 5.1, < 5.4',
-   'std.normalize >= 2.0.1',
+   'std.normalize >= 1.0.2',
 }
-
-source = (function(gitp)
-   if gitp then
-      dependencies[#dependencies + 1] = 'ldoc'
-
-      return {
-         url = 'git://github.com/gvvaughan/typecheck.git',
-      }
-   else
-      return {
-         url = 'http://github.com/gvvaughan/typecheck/archive/v' .. _MODREV .. '.zip',
-         dir = 'typecheck-' .. _MODREV,
-      }
-   end
-end)(_MODREV == 'git')
 
 build = {
    type = 'builtin',

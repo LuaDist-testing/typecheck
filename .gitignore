@@ -1,0 +1,6 @@
+*~
+.DS_Store
+/build-aux/config.ld
+/luacov.*.out
+/typecheck-*.src.rock
+/typecheck-*.tar.gz

@@ -1,13 +1,10 @@
-# Gradual Function Type Checking for Lua 5.1, 5.2 & 5.3.
-# Copyright (C) 2014-2018 Gary V. Vaughan
-
 LDOC	= ldoc
 LUA	= lua
 MKDIR	= mkdir -p
 SED	= sed
 SPECL	= specl
 
-VERSION	= git
+VERSION	= 1.1
 
 luadir	= lib/typecheck
 SOURCES =				\
@@ -16,20 +13,29 @@ SOURCES =				\
 	$(NOTHING_ELSE)
 
 
-all: $(luadir)/version.lua doc
+all:
 
 
-$(luadir)/version.lua: Makefile
-	echo "return 'Gradual Function Typechecks / $(VERSION)'" > '$@'
+$(luadir)/version.lua: .FORCE
+	@echo 'return "Gradual Function Typechecks / $(VERSION)"' > '$@T';	\
+	if cmp -s '$@' '$@T'; then						\
+	    rm -f '$@T';							\
+	else									\
+	    echo 'echo "Gradual Function Typechecks / $(VERSION)" > $@';	\
+	    mv '$@T' '$@';							\
+	fi
 
 doc: build-aux/config.ld $(SOURCES)
 	$(LDOC) -c build-aux/config.ld .
 
-build-aux/config.ld: build-aux/config.ld.in Makefile
-	$(SED) -e 's,@PACKAGE_VERSION@,$(VERSION),' '$<' > '$@'
+build-aux/config.ld: build-aux/config.ld.in
+	$(SED) -e "s,@PACKAGE_VERSION@,$(VERSION)," '$<' > '$@'
 
 
 CHECK_ENV = LUA=$(LUA)
 
 check: $(SOURCES)
-	LUA=$(LUA) $(SPECL) $(SPECL_OPTS) spec/*_spec.yaml
+	LUA=$(LUA) $(SPECL) $(SPECL_OPTS) specs/*_spec.yaml
+
+
+.FORCE:
